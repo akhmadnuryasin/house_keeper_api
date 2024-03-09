@@ -1,0 +1,514 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Hotel Management API"
+  },
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "nomorPegawai": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "Kamar": {
+      "type": "object",
+      "properties": {
+        "nomorKamar": {
+          "type": "string"
+        },
+        "statusBersih": {
+          "type": "string"
+        }
+      }
+    },
+    "Absensi": {
+      "type": "object",
+      "properties": {
+        "nomorPegawai": {
+          "type": "string"
+        },
+        "jamMasuk": {
+          "type": "string"
+        },
+        "jamPulang": {
+          "type": "string"
+        },
+        "tanggal": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "User Login",
+        "description": "Authenticate user and receive JWT token.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User credentials.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Returns JWT token.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/karyawan/absensi": {
+      "get": {
+        "summary": "Employee Attendance Records",
+        "description": "Get the attendance records for the logged-in employee (karyawan only).",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Returns the attendance records for the employee.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Absensi"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Token is invalid or expired.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/karyawan/kamar": {
+      "get": {
+        "summary": "List of Rooms",
+        "description": "Get a list of rooms.",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Returns a list of rooms.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Kamar"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Token is invalid or expired.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/karyawan/kamar/{nomorKamar}": {
+      "put": {
+        "summary": "Update Room Status",
+        "description": "Update the status of a room (karyawan only).",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "nomorKamar",
+            "type": "string",
+            "required": true,
+            "description": "Room number to update status."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated status for the room.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Kamar"
+            }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Room status updated.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. Token is invalid or expired.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/listKamar": {
+      "get": {
+        "summary": "List of Rooms",
+        "description": "Get a list of rooms (admin only).",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Returns a list of rooms.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Kamar"
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden. Only admin can access this route.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/editKamar/{nomorKamar}": {
+      "put": {
+        "summary": "Edit Room Status",
+        "description": "Edit the status of a room (admin only).",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "nomorKamar",
+            "type": "string",
+            "required": true,
+            "description": "Room number to edit."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated status for the room.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Kamar"
+            }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Room status updated.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden. Only admin can access this route.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/listAbsensi": {
+      "get": {
+        "summary": "List of Attendance Records",
+        "description": "Get a list of attendance records (admin only).",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Returns a list of attendance records.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Absensi"
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden. Only admin can access this route.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/editAbsensi/{nomorPegawai}": {
+      "put": {
+        "summary": "Edit Attendance Record",
+        "description": "Edit an attendance record (admin only).",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "nomorPegawai",
+            "type": "string",
+            "required": true,
+            "description": "Employee number for whom to edit the attendance record."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated attendance record data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Absensi"
+            }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Attendance record updated.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden. Only admin can access this route.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
