@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2024 at 09:00 AM
+-- Generation Time: Mar 10, 2024 at 06:01 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `absensi` (
 
 INSERT INTO `absensi` (`id`, `nomorPegawai`, `jamMasuk`, `jamPulang`, `tanggal`) VALUES
 (1, 'karyawan456', '2022-03-09 08:00:00', '2022-03-09 17:00:00', '2022-03-09'),
-(2, '789012', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2024-03-09');
+(2, '789012', '2024-03-14 23:51:09', '2024-03-19 23:51:09', '2024-03-09');
 
 -- --------------------------------------------------------
 
@@ -52,16 +52,17 @@ INSERT INTO `absensi` (`id`, `nomorPegawai`, `jamMasuk`, `jamPulang`, `tanggal`)
 CREATE TABLE `kamar` (
   `nomorKamar` int(11) NOT NULL,
   `status` enum('terisi','kosong') DEFAULT 'kosong',
-  `statusBersih` enum('sudah','belum') DEFAULT 'belum'
+  `statusBersih` enum('sudah','belum') DEFAULT 'belum',
+  `updatedBy` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `kamar`
 --
 
-INSERT INTO `kamar` (`nomorKamar`, `status`, `statusBersih`) VALUES
-(102, 'terisi', 'sudah'),
-(103, 'kosong', 'sudah');
+INSERT INTO `kamar` (`nomorKamar`, `status`, `statusBersih`, `updatedBy`) VALUES
+(102, 'terisi', 'sudah', '123456'),
+(103, 'kosong', 'sudah', '789012');
 
 -- --------------------------------------------------------
 
@@ -83,7 +84,6 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `nomorPegawai`, `password`, `role`) VALUES
 (1, 'admin123', 'adminpassword', 'admin'),
 (2, 'karyawan456', 'karyawanpassword', 'karyawan'),
-(3, '123456', 'password123', 'admin'),
 (4, '789012', 'password456', 'karyawan');
 
 --

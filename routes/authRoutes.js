@@ -9,13 +9,14 @@ router.post('/login', async (req, res) => {
     try {
         const user = await db.promise().query('SELECT * FROM Users WHERE nomorPegawai = ? AND password = ?', [nomorPegawai, password]);
 
-        if (user[0].length === 0) {
+        if (!user[0] || user[0].length === 0) {
             res.status(401).json({ message: 'Invalid credentials' });
             return;
         }
 
         const role = user[0][0].role;
-        const token = jwt.sign({ nomorPegawai, role }, 'secret_key', { expiresIn: '1h' });
+        const namaKaryawan = user[0][0].namaKaryawan;
+        const token = jwt.sign({ nomorPegawai, role, namaKaryawan }, 'secret_key', { expiresIn: '1h' });
 
         res.json({ token });
     } catch (error) {
