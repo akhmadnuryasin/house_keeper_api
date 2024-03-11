@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../db');
 const jwt = require('jsonwebtoken');
 
+const urlencodedParser = express.urlencoded({ extended: false });
+
 router.use((req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -30,7 +32,7 @@ router.get('/listKamar', async (req, res) => {
     }
 });
 
-router.put('/editKamar/:nomorKamar', async (req, res) => {
+router.put('/editKamar/:nomorKamar', urlencodedParser, async (req, res) => {
     const { statusBersih } = req.body;
 
     try {
@@ -52,7 +54,7 @@ router.get('/listAbsensi', async (req, res) => {
     }
 });
 
-router.put('/editAbsensi/:nomorPegawai', async (req, res) => {
+router.put('/editAbsensi/:nomorPegawai', urlencodedParser, async (req, res) => {
     const { jamMasuk, jamPulang, tanggal } = req.body;
 
     try {

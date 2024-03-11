@@ -3,8 +3,10 @@ const router = express.Router();
 const db = require('../db');
 const jwt = require('jsonwebtoken');
 
-router.post('/login', async (req, res) => {
-    const { nomorPegawai, password } = req.body;
+const urlencodedParser = express.urlencoded({ extended: false });
+
+router.post('/login', urlencodedParser, async (req, res) => {
+    const { nomorPegawai, password } = req.body || req.query;
 
     try {
         const user = await db.promise().query('SELECT * FROM Users WHERE nomorPegawai = ? AND password = ?', [nomorPegawai, password]);

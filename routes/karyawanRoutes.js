@@ -3,11 +3,12 @@ const router = express.Router();
 const db = require('../db');
 const jwt = require('jsonwebtoken');
 
+const urlencodedParser = express.urlencoded({ extended: false });
+
 const extractUserIdMiddleware = (req, res, next) => {
     const authorizationHeader = req.headers.authorization;
     if (authorizationHeader) {
         const token = authorizationHeader.split(' ')[1];
-
 
         if (token) {
             try {
@@ -50,9 +51,8 @@ router.get('/kamar', async (req, res) => {
     }
 });
 
-router.put('/kamar/:nomorKamar', async (req, res) => {
+router.put('/kamar/:nomorKamar', urlencodedParser, async (req, res) => {
     const { statusBersih } = req.body;
-
     const userId = req.user && req.user.id;
 
     try {
@@ -64,6 +64,5 @@ router.put('/kamar/:nomorKamar', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
-
 
 module.exports = router;
