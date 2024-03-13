@@ -18,9 +18,19 @@ router.post('/login', urlencodedParser, async (req, res) => {
 
         const role = user[0][0].role;
         const namaKaryawan = user[0][0].namaKaryawan;
+
+        let userType;
+        if (role === 'admin') {
+            userType = 'Admin';
+        } else if (role === 'karyawan') {
+            userType = 'Karyawan';
+        } else {
+            userType = 'Unknown';
+        }
+
         const token = jwt.sign({ nomorPegawai, role, namaKaryawan }, 'secret_key', { expiresIn: '1h' });
 
-        res.json({ token });
+        res.json({ token, userType });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
