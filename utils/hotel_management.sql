@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2024 at 06:01 PM
+-- Generation Time: Apr 05, 2024 at 05:39 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -30,8 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `absensi` (
   `id` int(11) NOT NULL,
   `nomorPegawai` varchar(255) DEFAULT NULL,
-  `jamMasuk` datetime DEFAULT NULL,
-  `jamPulang` datetime DEFAULT NULL,
+  `jamMasuk` time DEFAULT NULL,
+  `jamPulang` time DEFAULT NULL,
   `tanggal` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,8 +40,8 @@ CREATE TABLE `absensi` (
 --
 
 INSERT INTO `absensi` (`id`, `nomorPegawai`, `jamMasuk`, `jamPulang`, `tanggal`) VALUES
-(1, 'karyawan456', '2022-03-09 08:00:00', '2022-03-09 17:00:00', '2022-03-09'),
-(2, '789012', '2024-03-14 23:51:09', '2024-03-19 23:51:09', '2024-03-09');
+(1, 'karyawan456', '08:10:00', '20:00:00', '2024-03-31'),
+(2, '789012', '08:10:00', '20:00:00', '2024-03-31');
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE `kamar` (
 --
 
 INSERT INTO `kamar` (`nomorKamar`, `status`, `statusBersih`, `updatedBy`) VALUES
-(102, 'terisi', 'sudah', '123456'),
+(102, 'kosong', 'belum', 'admin123'),
 (103, 'kosong', 'sudah', '789012');
 
 -- --------------------------------------------------------
@@ -84,7 +84,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `nomorPegawai`, `password`, `role`) VALUES
 (1, 'admin123', 'adminpassword', 'admin'),
 (2, 'karyawan456', 'karyawanpassword', 'karyawan'),
-(4, '789012', 'password456', 'karyawan');
+(4, '789012', 'password456', 'karyawan'),
+(5, 'joko', 'joko123', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -130,7 +131,7 @@ ALTER TABLE `kamar`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
