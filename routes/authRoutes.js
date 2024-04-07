@@ -17,8 +17,7 @@ router.post('/login', urlencodedParser, async (req, res) => {
         }
 
         const role = user[0][0].role;
-        const namaKaryawan = user[0][0].namaKaryawan;
-        const nomorPegawaiFromDB = user[0][0].nomorPegawai;
+        const namaKaryawan = user[0][0].nama;
 
         let userType;
         if (role === 'admin') {
@@ -29,9 +28,15 @@ router.post('/login', urlencodedParser, async (req, res) => {
             userType = 'Unknown';
         }
 
-        const token = jwt.sign({ nomorPegawai: nomorPegawaiFromDB, role, namaKaryawan }, 'secret_key', { expiresIn: '1h' });
+        const tokenPayload = {
+            nomorPegawai,
+            role,
+            namaKaryawan
+        };
 
-        res.json({ token, userType, nomorPegawai: nomorPegawaiFromDB });
+        const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
+
+        res.json({ token, userType, nomorPegawai, nama: namaKaryawan }); // Menambahkan nama ke respons JSON
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
