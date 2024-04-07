@@ -36,7 +36,7 @@ router.get('/listKamar', async (req, res) => {
 });
 
 router.put('/editKamar/:nomorKamar', urlencodedParser, async (req, res) => {
-    const { statusBersih, status } = req.body;
+    const { nomorKamar, statusBersih, status } = req.body;
 
     try {
         if (!req.userData || !req.userData.nomorPegawai) {
@@ -52,12 +52,11 @@ router.put('/editKamar/:nomorKamar', urlencodedParser, async (req, res) => {
             return res.status(400).json({ message: 'Invalid status value' });
         }
 
-        const result = await db.promise().query('UPDATE Kamar SET statusBersih = ?, status = ?, updatedBy = ? WHERE nomorKamar = ?', [statusBersih, status, userId, req.params.nomorKamar]);
+        const result = await db.promise().query('UPDATE Kamar SET nomorKamar = ?, statusBersih = ?, status = ?, updatedBy = ? WHERE nomorKamar = ?', [nomorKamar, statusBersih, status, userId, req.params.nomorKamar]);
 
         if (result[0].affectedRows === 0) {
             return res.status(404).json({ message: 'Kamar not found' });
         }
-
 
         res.json({ message: 'Status kamar updated successfully' });
     } catch (error) {
@@ -65,6 +64,7 @@ router.put('/editKamar/:nomorKamar', urlencodedParser, async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 
 router.get('/listAbsensi', async (req, res) => {
@@ -77,20 +77,21 @@ router.get('/listAbsensi', async (req, res) => {
     }
 });
 
-router.put('/editAbsensi/:nomorPegawai', urlencodedParser, async (req, res) => {
+router.put('/editAbsensi/:id', urlencodedParser, async (req, res) => {
     const { jamMasuk, jamPulang, tanggal } = req.body;
 
     try {
         const currentTimestamp = new Date().toISOString().slice(0, 10);
         const absensiDate = tanggal ? tanggal : currentTimestamp;
 
-        await db.promise().query('UPDATE Absensi SET jamMasuk = ?, jamPulang = ?, tanggal = ? WHERE nomorPegawai = ?', [jamMasuk, jamPulang, absensiDate, req.params.nomorPegawai]);
+        await db.promise().query('UPDATE Absensi SET jamMasuk = ?, jamPulang = ?, tanggal = ? WHERE id = ?', [jamMasuk, jamPulang, absensiDate, req.params.id]);
         res.json({ message: 'Data absensi updated successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 
 
