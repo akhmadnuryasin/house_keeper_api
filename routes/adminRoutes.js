@@ -99,19 +99,25 @@ router.put('/editAbsensi/:id', urlencodedParser, async (req, res) => {
 
 router.post('/users', urlencodedParser, async (req, res) => {
     try {
-        const { nomorPegawai, password, role } = req.body;
+        const { nomorPegawai, password, role, nama } = req.body;
 
-        if (!nomorPegawai || !password || !role) {
-            return res.status(400).json({ message: 'Nomor Pegawai, password, dan role diperlukan' });
+        if (!nomorPegawai || !password || !role || !nama) {
+            return res.status(400).json({ message: 'Nomor Pegawai, password, role, dan nama diperlukan' });
+        }
+
+        const existingUser = await db.promise().query('SELECT * FROM Users WHERE nomorPegawai = ?', [nomorPegawai]);
+        if (existingUser[0].length > 0) {
+            return res.status(409).json({ message: 'Nomor Pegawai sudah digunakan' });
         }
 
         const newUser = {
             nomorPegawai,
             password,
-            role
+            role,
+            nama
         };
 
-        const result = await db.promise().query('INSERT INTO Users (nomorPegawai, password, role) VALUES (?, ?, ?)', [newUser.nomorPegawai, newUser.password, newUser.role]);
+        const result = await db.promise().query('INSERT INTO Users (nomorPegawai, password, role, nama) VALUES (?, ?, ?, ?)', [newUser.nomorPegawai, newUser.password, newUser.role, newUser.nama]);
 
         res.status(201).json({ message: 'User created successfully', userId: result[0].insertId });
     } catch (error) {
@@ -119,6 +125,7 @@ router.post('/users', urlencodedParser, async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 router.get('/users', async (req, res) => {
     try {
@@ -150,13 +157,45 @@ router.get('/users/:userId', async (req, res) => {
 router.put('/users/:userId', urlencodedParser, async (req, res) => {
     try {
         const { userId } = req.params;
-        const { nomorPegawai, password, role } = req.body;
+        const { nomorPegawai, password, role, nama } = req.body;
 
-        if (!nomorPegawai || !password || !role) {
-            return res.status(400).json({ message: 'Nomor Pegawai, password, dan role diperlukan' });
+        if (!nomorPegawai && (!password || !role || !nama)) {
+            return res.status(400).json({ message: 'Nomor Pegawai, password, role, dan nama diperlukan' });
         }
 
-        const result = await db.promise().query('UPDATE Users SET nomorPegawai = ?, password = ?, role = ? WHERE id = ?', [nomorPegawai, password, role, userId]);
+        if (nomorPegawai) {
+            const existingUser = await db.promise().query('SELECT * FROM Users WHERE nomorPegawai = ? AND id != ?', [nomorPegawai, userId]);
+            if (existingUser[0].length > 0) {
+                return res.status(409).json({ message: 'Nomor Pegawai sudah digunakan oleh pengguna lain' });
+            }
+        }
+
+        const valuesToUpdate = [];
+        let query = 'UPDATE Users SET';
+
+        if (nomorPegawai) {
+            query += ' nomorPegawai = ?,';
+            valuesToUpdate.push(nomorPegawai);
+        }
+        if (password) {
+            query += ' password = ?,';
+            valuesToUpdate.push(password);
+        }
+        if (role) {
+            query += ' role = ?,';
+            valuesToUpdate.push(role);
+        }
+        if (nama) {
+            query += ' nama = ?,';
+            valuesToUpdate.push(nama);
+        }
+
+        query = query.slice(0, -1);
+
+        query += ' WHERE id = ?';
+        valuesToUpdate.push(userId);
+
+        const result = await db.promise().query(query, valuesToUpdate);
 
         if (result[0].affectedRows === 0) {
             return res.status(404).json({ message: 'User not found' });
@@ -168,6 +207,8 @@ router.put('/users/:userId', urlencodedParser, async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+
 
 router.delete('/users/:userId', async (req, res) => {
     try {

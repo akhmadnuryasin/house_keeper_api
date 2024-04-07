@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2024 at 05:39 PM
+-- Generation Time: Apr 07, 2024 at 05:37 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -40,8 +40,9 @@ CREATE TABLE `absensi` (
 --
 
 INSERT INTO `absensi` (`id`, `nomorPegawai`, `jamMasuk`, `jamPulang`, `tanggal`) VALUES
-(1, 'karyawan456', '08:10:00', '20:00:00', '2024-03-31'),
-(2, '789012', '08:10:00', '20:00:00', '2024-03-31');
+(1, 'karyawan456', '08:50:00', '23:11:00', '2024-04-29'),
+(2, '789012', '08:50:00', '23:00:00', '2024-04-29'),
+(3, '789012', '08:50:00', '23:11:00', '2024-04-29');
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,7 @@ CREATE TABLE `kamar` (
 --
 
 INSERT INTO `kamar` (`nomorKamar`, `status`, `statusBersih`, `updatedBy`) VALUES
-(102, 'kosong', 'belum', 'admin123'),
+(101, 'kosong', 'belum', 'admin123'),
 (103, 'kosong', 'sudah', '789012');
 
 -- --------------------------------------------------------
@@ -72,6 +73,7 @@ INSERT INTO `kamar` (`nomorKamar`, `status`, `statusBersih`, `updatedBy`) VALUES
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `nama` varchar(255) NOT NULL,
   `nomorPegawai` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `role` enum('admin','karyawan') DEFAULT 'karyawan'
@@ -81,11 +83,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `nomorPegawai`, `password`, `role`) VALUES
-(1, 'admin123', 'adminpassword', 'admin'),
-(2, 'karyawan456', 'karyawanpassword', 'karyawan'),
-(4, '789012', 'password456', 'karyawan'),
-(5, 'joko', 'joko123', 'admin');
+INSERT INTO `users` (`id`, `nama`, `nomorPegawai`, `password`, `role`) VALUES
+(2, 'nama13', 'karyawan456', 'coba123', 'admin'),
+(4, 'nama133', '789012', 'coba123', 'admin'),
+(6, 's', 'cobalagi', 'coba123', 'admin'),
+(10, 'nama1334', '7890122', 'coba123', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -119,7 +121,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `kamar`
@@ -131,7 +133,7 @@ ALTER TABLE `kamar`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
