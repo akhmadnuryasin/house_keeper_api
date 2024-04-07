@@ -81,13 +81,17 @@ router.put('/editAbsensi/:nomorPegawai', urlencodedParser, async (req, res) => {
     const { jamMasuk, jamPulang, tanggal } = req.body;
 
     try {
-        await db.promise().query('UPDATE Absensi SET jamMasuk = ?, jamPulang = ?, tanggal = ? WHERE nomorPegawai = ?', [jamMasuk, jamPulang, tanggal, req.params.nomorPegawai]);
+        const currentTimestamp = new Date().toISOString().slice(0, 10);
+        const absensiDate = tanggal ? tanggal : currentTimestamp;
+
+        await db.promise().query('UPDATE Absensi SET jamMasuk = ?, jamPulang = ?, tanggal = ? WHERE nomorPegawai = ?', [jamMasuk, jamPulang, absensiDate, req.params.nomorPegawai]);
         res.json({ message: 'Data absensi updated successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 
 // users routes
